@@ -1,0 +1,10 @@
+{% for grade in grades %}
+  <tr>
+    <td>{{ grade['Course_Name'] }}</td>
+    <td>{{ grade['Letter_Grade'] }}</td>
+    <td>{{ grade['Grade_Level'] }}</td>
+    <td>{{ grade['Credit_Type'] }}</td>
+    <td>{{ grade['Credit_Awarded'] }}</td>
+    <td>{{ grade['Credit_Potential'] }}</td>
+  </tr>
+{% endfor %}

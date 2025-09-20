@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style/home.css">
+    <link rel="stylesheet" href="../static/style/navbar.css">
+    <script src="../static/js/home.js"></script>
+    <script src="https://kit.fontawesome.com/683901d729.js" crossorigin="anonymous"></script>
+
+    <title> Home </title>
+</head>
+
+<body>
+    <nav class="mainNav">
+        <a class="active" href="{{ url_for('home') }}"> <i class="fa-solid fa-house"></i> Home </a>
+        <a href="{{ url_for('student') }}"> <i class="fa-solid fa-magnifying-glass"></i> Student Search </a>
+    </nav>
+
+    <main class="mainContent">
+        <div id="homeHeader">
+            <h1>Home</h1>
+            <p>View and filter on all students.</p>
+        </div>
+
+        <div class="contentWrapper">
+            <div class="tableWrapper">
+                <h1>Students <span class="studentTableCount">({{ count[0]['COUNT(*)'] }})</span></h1>
+                <table class="studentTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First_Name</th>
+                            <th>Last_Name</th>
+                            <th>Grade</th>
+                            <th>Expected Graduation</th>
+                            <th>Gender</th>
+                            <th>School</th>
+                            <th>GPA</th>
+                            <th>Attendance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        {% include 'partials/student_table_body.html' %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <form method="get" action="{{ url_for('home') }}">
+                <div class="filterContent">
+                    <h3>Filters</h3>
+                    <p>Grade</p>
+                    <div>
+                        <input type="checkbox" id="g9" name="grade" value="9">
+                        <label for="g9"> 9 </label>
+                        <input type="checkbox" id="g10" name="grade" value="10">
+                        <label for="g10"> 10 </label>
+                        <input type="checkbox" id="g11" name="grade" value="11">
+                        <label for="g11"> 11 </label>
+                        <input type="checkbox" id="g12" name="grade" value="12">
+                        <label for="g12"> 12 </label>
+                    </div>
+
+                    <p>Expected Graduation</p>
+                    <div>
+                        <input type="checkbox" id="grad2025" name="gradYear" value="2025">
+                        <label for="grad2025">2025</label>
+                        <input type="checkbox" id="grad2026" name="gradYear" value="2026">
+                        <label for="grad2026">2026</label>
+                        <input type="checkbox" id="grad2027" name="gradYear" value="2027">
+                        <label for="grad2027">2027</label>
+                        <input type="checkbox" id="grad2028" name="gradYear" value="2028">
+                        <label for="grad2028">2028</label>
+                    </div>
+                    
+                    <p>Gender</p>
+                    <div>
+                        <input type="checkbox" id="gm" name="gender" value="M">
+                        <label for="gm"> Male </label>
+                        <input type="checkbox" id="gf" name="gender" value="F">
+                        <label for="gf"> Female </label>
+                    </div>
+                    
+                    <p>School</p>
+                    <div>
+                        <input type="checkbox" id="woodHS" name="schools" value="Wood HS">
+                        <label for="woodHS">Wood HS</label>
+                        <input type="checkbox" id="unifiedHS" name="schools" value="Unified HS">
+                        <label for="unifiedHS">Unified HS</label>
+                        <input type="checkbox" id="greenHS" name="schools" value="Green HS">
+                        <label for="greenHS">Green HS</label>
+                    </div>
+
+                    <p>Other</p>
+                    <div>
+                        <input type="checkbox" id="ESL" name="other" value="ESL">
+                        <label for="ESL"> English Language Learner </label>
+                        <input type="checkbox" id="foster" name="other" value="Foster">
+                        <label for="foster"> Foster Care </label>
+                    </div>
+                </div>
+                <p><button id="submitFilter">Filter</button></p>
+            </form>
+                
+        </div>
+    </main>
+</body>
+
+</html>
+

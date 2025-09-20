@@ -1,0 +1,64 @@
+main{
+    margin-left: 200px;
+    padding: 25px;
+}
+
+#homeHeader h1{
+    font-size: 48px;
+    margin-bottom: 5px;
+}
+
+.studentTable, th, td{
+    border: 1px solid;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+}
+
+#studentTableBody tr {
+  cursor: pointer;
+}
+
+.studentTableCount{
+    font-size: 0.6em; 
+    color: #555;
+}
+
+td {
+  text-align: center;
+  padding: 5px;
+}
+
+tr{
+    padding: 5px;
+}
+tr:hover {
+    background-color: rgba(121, 161, 255, 0.5);
+}
+
+.mainContent{
+    margin-left: 12%;
+}
+
+.tableWrapper {
+    flex: 3;
+    margin: 20px 0px;
+}
+
+.contentWrapper {
+    display: flex;
+    gap: 20px;
+}
+
+.filterContent {
+    flex: 1;
+    padding: 16px;
+    background-color: rgb(229, 229, 229);
+    display: block;
+}
+
+.filterTab {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}

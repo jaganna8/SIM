@@ -1,0 +1,13 @@
+{% for student in students%}
+  <tr onclick="window.location='{{ url_for('student', student_id=student['ID']) }}'">
+    <td>{{ student['ID'] }}</i></td>
+    <td>{{ student['First_Name'] }}</td>
+    <td>{{ student['Last_Name'] }}</td>
+    <td>{{ student['Grade'] }}</td>
+    <td>{{ student['Expected_Graduation'] }}</td>
+    <td>{{ student['Gender'] }}</td>
+    <td>{{ student['School'] }}</td>
+    <td>{{ student['GPA'] }}</td>
+    <td>{{ student['Attendance'] }}%</td>
+  </tr>
+{% endfor %}

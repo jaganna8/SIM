@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Student View</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="../static/student/css/student.css">
+    <link rel="stylesheet" href="../static/style/navbar.css">
+    <script src="../static/student/js/student.js"></script>
+    <script src="https://kit.fontawesome.com/683901d729.js" crossorigin="anonymous"></script>
+    
+    <title>Student Search</title>
+</head>
+<body>
+    <nav class="mainNav">
+        <a href="{{ url_for('home') }}"> <i class="fa-solid fa-house"></i> Home </a>
+        <a class="active" href="{{ url_for('student') }}"> <i class="fa-solid fa-magnifying-glass"></i> Student Search </a>
+    </nav>
+
+    <main>
+        <div id="studentHeader">
+            <h1>Student Search</h1>
+            <p>Search for and view details of a specific student.</p>
+        </div>
+
+        <div class="contentWrapper">
+            <div class="studentSelect">
+                <h2>Select a Student</h2>
+                <select name="students" id="studentsSelector">
+                    <option value="">Please Select a Student</option>
+                    {% for student in students%}
+                        <option value="{{ student['ID'] }}" {% if student_id == student['ID'] %}selected{% endif %}>
+                            {{ student['Last_Name'] }}, {{ student['First_Name'] }}
+                        </option>
+                    {% endfor %}
+                </select><br>
+                <button id="studentSelectSubmit">Find</button>
+            </div>
+
+            <div id="studentTablesWrapper">
+                <h2>Graduation Requirements</h2>
+                <div class="gradContentWrapper">
+                    <div class="gradTableWrapper">
+                        <h3>Current Credits Earned</h3>
+                        <table class="studentGradTable" id="studentCreditsTable">
+                            <thead>
+                                <tr>
+                                    <th>ELA</th>
+                                    <th>MTH</th>
+                                    <th>SCI</th>
+                                    <th>SS</th>
+                                    <th>LANG</th>
+                                    <th>ART</th>
+                                    <th>PE</th>
+                                    <th>Other</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- dynamically filled -->
+                            </tbody>
+                        </table>
+                    </div>
+                <div class="gradChartWrapper">
+                    <div class="piechart" id="creditsPieChart"></div>
+                        <div class="key">
+                            <dl>
+                                <dt class="db">[]</dt>
+                                <dd> - Completed (<span id="creditsEarned">0</span>) </dd>
+                                <br>
+                                <dt class="lb">[]</dt>
+                                <dd> - Remaining (<span id="creditsRemaining">0</span>) </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tab-container">
+                    <button class="tab-link active" data-tab="info">Student Info</button>
+                    <button class="tab-link" data-tab="attendance">Attendance</button>
+                    <button class="tab-link" data-tab="classes">Classes</button>
+                    <button class="tab-link" data-tab="grades">Final Grades</button>
+                </div>
+
+                <div class="tab-content active" id="info">
+                    <div id = studentInfoTable></div>
+                </div>
+
+                <div class="tab-content" id="attendance">
+                    <table class="studentInfoTable" id="studentAttendanceTable">
+                        <thead>
+                            <tr>
+                                <th>Course Name</th>
+                                <th>Date</th>
+                                <th>Present/Absent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-content" id="classes">
+                    <div style="margin: 10px;">
+                        <input type="checkbox" id="currOnly">
+                        <label for="currOnly"> Show current classes only</label>
+                    </div>
+                    <table class="studentInfoTable" id="studentClassesTable">
+                        <thead>
+                            <tr>
+                                <th>Course Name</th> 
+                                <th>Start_Date</th>
+                                <th>End_Date</th>
+                                <th>Possible Credit</th>
+                                <th>Credit Type</th>
+                                <th>School Year</th>
+                                <th>Term</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-content" id="grades">
+                    <h3>Final Grades</h3>
+                    <p id="gpaLabel">GPA: --</p>
+                    <table class="studentInfoTable" id="studentGradesTable">
+                        <thead>
+                            <tr>
+                                <th>Course Name</th>
+                                <th>Letter Grade</th>
+                                <th>Grade Level</th>
+                                <th>Credit Type</th>
+                                <th>Credit Earned</th>
+                                <th>Credit Potential</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{% for class in classes %}
+  <tr>
+    <td>{{ class['Course_Name'] }}</td>
+    <td>{{ class['Start_Date'] }}</td>
+    <td>{{ class['End_Date'] }}</td>
+    <td>{{ class['Possible_Credit'] }}</td>
+    <td>{{ class['Credit_Type'] }}</td>
+    <td>{{ class['School_Year'] }}</td>
+    <td>{{ class['Term'] }}</td>
+    <td>{{ class['Status'] }}</td>
+  </tr>
+{% endfor %}

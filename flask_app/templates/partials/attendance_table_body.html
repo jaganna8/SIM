@@ -1,0 +1,7 @@
+{% for att in attendance %}
+  <tr>
+    <td>{{ att['Course_Name'] }}</td>
+    <td>{{ att['attendance_date'] }}</td>
+    <td>{{ att['Code'] }}</td>
+  </tr>
+{% endfor %}
