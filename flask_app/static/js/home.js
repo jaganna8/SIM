@@ -1,15 +1,3 @@
-// load home page student table
-document.addEventListener("DOMContentLoaded", function () {
-    fetch("/api/student_summary")
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("studentTableCount").textContent = data.count;
-            document.getElementById("studentTableBody").innerHTML = data.table_html;  
-        })
-        .catch(err => console.error("Error loading students:", err));
-});
-
-
 // filter students on home page
 document.addEventListener("DOMContentLoaded", function () {
     const filterButton = document.getElementById("submitFilter");
