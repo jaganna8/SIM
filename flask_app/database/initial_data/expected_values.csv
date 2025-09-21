@@ -1,2 +1,2 @@
-ID,Baseline_GPA,Baseline_Attendance,Credits_Grade9, Credits_Grade10,Credits_Grade11,Credits_Grade12
-2.00,50.00,4.0,9.0,14.0,19.0
+Baseline_GPA,Credits_Grade9, Credits_Grade10,Credits_Grade11,Credits_Grade12
+2.00,4.0,9.0,14.0,19.0

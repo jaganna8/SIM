@@ -14,65 +14,42 @@ def root():
 # home page
 @app.route('/home')
 def home():
-	students = db.query(query="SELECT * FROM students ORDER BY Last_Name, First_Name")
-	count = db.query(query="SELECT COUNT(*) FROM students")
-	school_year = db.query("""SELECT School_Year
-						 FROM current_context""")[0]['School_Year']
-	
-	for student in students:
-		student_id = student["ID"]
-		grades = getGradesQuery(student_id=student_id)
-		gpa = calcGPA(grades=grades)
-		student["GPA"] = gpa
-		attendance_percent = getCurrYearAttendance(student_id=student_id, school_year=school_year)
-		student["Attendance"] = attendance_percent
+    school_year = db.query("SELECT School_Year FROM current_context")[0]['School_Year']
+    count = db.query("SELECT COUNT(*) FROM students")
 
-		
-	return render_template("home.html", students=students, count = count)
+    students = db.query("""
+        SELECT 
+            s.ID,
+            s.First_Name,
+            s.Last_Name,
+            s.Grade,
+            s.Expected_Graduation,
+            s.Gender,
+            s.School,
+						
+            ROUND(
+                COALESCE(
+                    SUM(
+                        CASE 
+                            WHEN fg.Letter_Grade = 'A' THEN 4
+                            WHEN fg.Letter_Grade = 'B' THEN 3
+                            WHEN fg.Letter_Grade = 'C' THEN 2
+                            WHEN fg.Letter_Grade = 'D' THEN 1
+                            ELSE 0
+                        END
+                    ) / NULLIF(COUNT(fg.ID),0), 
+                    0
+                ), 2
+            ) AS GPA
+						
+        FROM students s
+        LEFT JOIN finalgrades fg ON fg.Student_ID = s.ID
+        LEFT JOIN classes c ON c.ID = fg.Classes_ID
+        GROUP BY s.ID
+        ORDER BY s.Last_Name, s.First_Name
+    """)
 
-# query final grades with course name for one student
-def getGradesQuery(student_id):
-	grades = db.query("""
-			SELECT 
-				g.ID AS grade_id,
-				g.Student_ID,
-				g.Classes_ID,
-				g.Letter_Grade,
-				g.Grade_Level,
-				g.Credit_Type,
-				g.Credit_Awarded,
-				g.Credit_Potential,
-				c.Course_Name
-			FROM finalgrades g
-			JOIN classes c ON g.Classes_ID = c.ID
-			WHERE g.Student_ID = %s
-			ORDER BY g.Grade_Level
-			""", (student_id,))
-
-	return grades
-
-# query attendance with course name for one student
-def getCurrYearAttendance(student_id, school_year):
-	attendance_summary = db.query("""
-			SELECT 
-				COUNT(*) AS total_days,
-				SUM(CASE WHEN a.Code = 'P' THEN 1 ELSE 0 END) AS days_present
-			FROM attendance a
-			JOIN classes c ON a.Classes_ID = c.ID
-			WHERE a.Student_ID = %s AND c.School_Year = %s
-			""", (student_id, school_year))
-
-	total_days = attendance_summary[0]["total_days"]
-	days_present = attendance_summary[0]["days_present"]
-	attendance_percent = round((days_present / total_days * 100), 2) if total_days > 0 else 0
-	return attendance_percent
-
-# student page
-@app.route("/student")
-@app.route("/student/<int:student_id>")
-def student(student_id=None):
-	students = db.query(query="SELECT * FROM students ORDER BY Last_Name, First_Name")
-	return render_template("student.html", students=students, student_id=student_id)
+    return render_template("home.html", students=students, count=count)
 
 # filter students on the home page table
 @app.route('/filterStudents')
@@ -111,12 +88,48 @@ def filterStudents():
 	if 'Foster' in others:
 		where_clauses.append("Flag_FosterCare = 1")
 
-	query = "SELECT * FROM students"
+	query = """
+        SELECT 
+            s.ID,
+            s.First_Name,
+            s.Last_Name,
+            s.Grade,
+            s.Expected_Graduation,
+            s.Gender,
+            s.School,
+            ROUND(
+                COALESCE(
+                    SUM(
+                        CASE 
+                            WHEN fg.Letter_Grade = 'A' THEN 4
+                            WHEN fg.Letter_Grade = 'B' THEN 3
+                            WHEN fg.Letter_Grade = 'C' THEN 2
+                            WHEN fg.Letter_Grade = 'D' THEN 1
+                            ELSE 0
+                        END
+                    ) / NULLIF(COUNT(fg.ID),0),
+                    0
+                ),2
+            ) AS GPA
+        FROM students s
+        LEFT JOIN finalgrades fg ON fg.Student_ID = s.ID
+        LEFT JOIN classes c      ON c.ID = fg.Classes_ID
+    """
 	if where_clauses:
 		query += " WHERE " + " AND ".join(where_clauses)
 
+	query += " GROUP BY s.ID ORDER BY s.Last_Name, s.First_Name"
+
 	students = db.query(query, parameters=params)
 	return render_template('partials/student_table_body.html', students=students)
+
+
+# student page
+@app.route("/student")
+@app.route("/student/<int:student_id>")
+def student(student_id=None):
+	students = db.query(query="SELECT * FROM students ORDER BY Last_Name, First_Name")
+	return render_template("student.html", students=students, student_id=student_id)
 
 # calculate student gpa
 def calcGPA(grades):
@@ -181,7 +194,22 @@ def loadStudentTables():
 			""", (student_id,))
 
 		# Final Grades (with course name)
-		grades = getGradesQuery(student_id=student_id)
+		grades = db.query("""
+			SELECT 
+				g.ID AS grade_id,
+				g.Student_ID,
+				g.Classes_ID,
+				g.Letter_Grade,
+				g.Grade_Level,
+				g.Credit_Type,
+				g.Credit_Awarded,
+				g.Credit_Potential,
+				c.Course_Name
+			FROM finalgrades g
+			JOIN classes c ON g.Classes_ID = c.ID
+			WHERE g.Student_ID = %s
+			ORDER BY g.Grade_Level
+			""", (student_id,))
 		
 		gpa = calcGPA(grades=grades)
 		
