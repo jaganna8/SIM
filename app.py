@@ -14,42 +14,48 @@ def root():
 # home page
 @app.route('/home')
 def home():
-    school_year = db.query("SELECT School_Year FROM current_context")[0]['School_Year']
-    count = db.query("SELECT COUNT(*) FROM students")
+	count = db.query("SELECT COUNT(*) FROM students")
 
-    students = db.query("""
-        SELECT 
-            s.ID,
-            s.First_Name,
-            s.Last_Name,
-            s.Grade,
-            s.Expected_Graduation,
-            s.Gender,
-            s.School,
-						
-            ROUND(
-                COALESCE(
-                    SUM(
-                        CASE 
-                            WHEN fg.Letter_Grade = 'A' THEN 4
-                            WHEN fg.Letter_Grade = 'B' THEN 3
-                            WHEN fg.Letter_Grade = 'C' THEN 2
-                            WHEN fg.Letter_Grade = 'D' THEN 1
-                            ELSE 0
-                        END
-                    ) / NULLIF(COUNT(fg.ID),0), 
-                    0
-                ), 2
-            ) AS GPA
-						
-        FROM students s
-        LEFT JOIN finalgrades fg ON fg.Student_ID = s.ID
-        LEFT JOIN classes c ON c.ID = fg.Classes_ID
-        GROUP BY s.ID
-        ORDER BY s.Last_Name, s.First_Name
-    """)
+	return render_template("home.html", count=count)
 
-    return render_template("home.html", students=students, count=count)
+@app.route('/loadStudents')
+def loadStudents():
+	offset = int(request.args.get('offset', 0))
+	limit = int(request.args.get('limit', 50))
+
+	students = db.query("""
+		SELECT 
+			s.ID,
+			s.First_Name,
+			s.Last_Name,
+			s.Grade,
+			s.Expected_Graduation,
+			s.Gender,
+			s.School,
+						
+			ROUND(
+				COALESCE(
+					SUM(
+						CASE 
+							WHEN fg.Letter_Grade = 'A' THEN 4
+							WHEN fg.Letter_Grade = 'B' THEN 3
+							WHEN fg.Letter_Grade = 'C' THEN 2
+							WHEN fg.Letter_Grade = 'D' THEN 1
+							ELSE 0
+						END
+					) / NULLIF(COUNT(fg.ID),0), 
+					0
+				), 2
+			) AS GPA
+						
+		FROM students s
+		LEFT JOIN finalgrades fg ON fg.Student_ID = s.ID
+		LEFT JOIN classes c ON c.ID = fg.Classes_ID
+		GROUP BY s.ID
+		ORDER BY s.Last_Name, s.First_Name
+		LIMIT %s OFFSET %s
+	""", (limit, offset,))
+	return render_template('partials/student_table_body.html', students=students)
 
 # filter students on the home page table
 @app.route('/filterStudents')
