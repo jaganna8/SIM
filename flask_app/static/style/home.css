@@ -19,6 +19,10 @@ main{
   cursor: pointer;
 }
 
+.low-gpa {
+  background-color: #ffcccc; /* light red */
+}
+
 .studentTableCount{
     font-size: 0.6em; 
     color: #555;

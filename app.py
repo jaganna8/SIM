@@ -11,15 +11,19 @@ db.createTables()
 def root():
 	return redirect('/home')
 
+### home page ###
+
 # home page
 @app.route('/home')
 def home():
-	count = db.query("SELECT COUNT(*) FROM students")
+	count = db.query("SELECT COUNT(*) FROM students")[0]['COUNT(*)']
 
 	return render_template("home.html", count=count)
 
 @app.route('/loadStudents')
 def loadStudents():
+	base_gpa = db.query("""SELECT Baseline_GPA from expected_values""")[0]['Baseline_GPA']
+
 	offset = int(request.args.get('offset', 0))
 	limit = int(request.args.get('limit', 50))
 
@@ -55,7 +59,7 @@ def loadStudents():
 		ORDER BY s.Last_Name, s.First_Name
 		LIMIT %s OFFSET %s
 	""", (limit, offset,))
-	return render_template('partials/student_table_body.html', students=students)
+	return render_template('partials/student_table_body.html', students=students, base_gpa = base_gpa)
 
 # filter students on the home page table
 @app.route('/filterStudents')
@@ -129,6 +133,7 @@ def filterStudents():
 	students = db.query(query, parameters=params)
 	return render_template('partials/student_table_body.html', students=students)
 
+### student page ###
 
 # student page
 @app.route("/student")

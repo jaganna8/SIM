@@ -1,5 +1,6 @@
 {% for student in students%}
-  <tr onclick="window.location='{{ url_for('student', student_id=student['ID']) }}'">
+  <tr onclick="window.location='{{ url_for('student', student_id=student['ID']) }}'"
+    style="cursor: pointer;"class="{% if student['GPA'] <= base_gpa %}low-gpa{% endif %}">
     <td>{{ student['ID'] }}</i></td>
     <td>{{ student['First_Name'] }}</td>
     <td>{{ student['Last_Name'] }}</td>
