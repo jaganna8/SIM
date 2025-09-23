@@ -189,7 +189,7 @@ def loadStudentTables():
 				a.ID as attendance_ID,
 				a.Student_ID,
 				a.Classes_ID,
-				a.Date as attendance_date,
+				a.`Date` as attendance_date,
 				a.Code,
 				c.Course_Name
 			FROM attendance a
@@ -197,7 +197,7 @@ def loadStudentTables():
 			WHERE a.Student_ID = %s
 			ORDER BY c.Course_Name, attendance_date
 			""", (student_id,))
-
+		
 		# Classes
 		classes = db.query("""
 			SELECT *
