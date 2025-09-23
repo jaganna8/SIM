@@ -5,6 +5,8 @@ from io import StringIO
 import itertools
 from math import pow
 import os
+import hashlib
+import base64
 
 
 class database:
@@ -112,3 +114,14 @@ class database:
         insert_id = self.query(query,parameters)[0]['LAST_INSERT_ID()']         
         return insert_id
 
+    def hash_password(self, password: str) -> str:
+        """
+        Hashes a password using PBKDF2-HMAC-SHA256 with a salt and returns the base64-encoded hash.
+        """
+        salt = self.encryption['oneway']['salt']
+        n = self.encryption['oneway']['n']
+        r = self.encryption['oneway']['r']
+        p = self.encryption['oneway']['p']
+        # Using PBKDF2-HMAC-SHA256 for password hashing
+        dk = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+        return base64.b64encode(dk).decode('utf-8')

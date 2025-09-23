@@ -9,7 +9,20 @@ db.createTables()
 # empty route
 @app.route('/')
 def root():
-	return redirect('/home')
+	return redirect('/login')
+
+
+### login or create account ###
+
+# login page
+@app.route('/login')
+def login():
+	return render_template("login.html")
+
+# create account page
+@app.route('/create')
+def create():
+	return render_template("create_account.html")
 
 ### home page ###
 
