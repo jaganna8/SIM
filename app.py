@@ -64,6 +64,8 @@ def loadStudents():
 # filter students on the home page table
 @app.route('/filterStudents')
 def filterStudents():
+	base_gpa = db.query("""SELECT Baseline_GPA from expected_values""")[0]['Baseline_GPA']
+
 	grades = request.args.getlist('grade')
 	grad_years = request.args.getlist('gradYear')
 	genders = request.args.getlist('gender')
@@ -131,7 +133,7 @@ def filterStudents():
 	query += " GROUP BY s.ID ORDER BY s.Last_Name, s.First_Name"
 
 	students = db.query(query, parameters=params)
-	return render_template('partials/student_table_body.html', students=students)
+	return render_template('partials/student_table_body.html', students=students, base_gpa = base_gpa)
 
 ### student page ###
 
