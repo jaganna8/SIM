@@ -78,7 +78,7 @@ body {
 .input-wrapper label {
     position: absolute;
     left: 16px;
-    top: 12px;
+    top: 8px;
     color: #64748b;
     font-size: 16px;
     transition: all 0.2s ease;
@@ -95,7 +95,7 @@ body {
 .input-wrapper input:focus + label,
 .input-wrapper input:valid + label,
 .input-wrapper input.has-value + label {
-    transform: translateY(-8px) scale(0.875);
+    transform: translateY(-8px) scale(0.75);
     color: #6366f1;
     font-weight: 500;
 }
