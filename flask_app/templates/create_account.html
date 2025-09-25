@@ -15,7 +15,7 @@
                 <p>Get started with us</p>
             </div>
             
-            <form class="login-form" id="createAccForm" novalidate>
+            <form class="login-form" id="createAccForm" method="POST" action="/create_account">
                 <div class="form-group">
                     <div class="input-wrapper">
                         <input type="email" id="createEmail" name="email" required autocomplete="email">
@@ -26,24 +26,24 @@
 
                 <div class="form-group">
                     <div class="input-wrapper password-wrapper">
-                        <input type="password" id="createPassword" name="password" required autocomplete="new-password">
+                        <input type="password" id="createPassword" name="createpassword" required autocomplete="new-password">
                         <label for="createPassword">Password</label>
                         <button type="button" class="password-toggle" id="createPasswordToggle" aria-label="Toggle password visibility">
                             <span class="eye-icon"></span>
                         </button>
                     </div>
-                    <span class="error-message" id="passwordError"></span>
+                    <span class="error-message" id="createpasswordError"></span>
                 </div>
 
                 <div class="form-group">
                     <div class="input-wrapper password-wrapper">
-                        <input type="password" id="repeatPassword" name="password" required autocomplete="new-password">
+                        <input type="password" id="repeatPassword" name="repeatpassword" required autocomplete="new-password">
                         <label for="createPassword">Repeat Password</label>
                         <button type="button" class="password-toggle" id="repeatPasswordToggle" aria-label="Toggle password visibility">
                             <span class="eye-icon"></span>
                         </button>
                     </div>
-                    <span class="error-message" id="passwordError"></span>
+                    <span class="error-message" id="repeatpasswordError"></span>
                 </div>
 
                 <button type="submit" class="login-btn">

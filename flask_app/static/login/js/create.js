@@ -1,4 +1,4 @@
-// login
+// create account
 document.addEventListener('DOMContentLoaded', function () {
     const createPasswordToggle = document.getElementById("createPasswordToggle");
     const createPasswordInput = document.getElementById("createPassword");
@@ -16,16 +16,27 @@ document.addEventListener('DOMContentLoaded', function () {
         repeatPasswordInput.setAttribute("type", type);
     });
 
+    // submit form + error handling
+    const createPasswordError = document.getElementById("createpasswordError");
+    const repeatPasswordError = document.getElementById("repeatpasswordError");
 
-    const form = document.getElementById('loginForm');
+    const form = document.getElementById('createAccForm');
     if (!form) return;
 
-    form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        // Collect form data
-        const formData = new FormData(form);
-        const params = new URLSearchParams(formData).toString();
-        console.log(params)
+    form.addEventListener('submit', async function (e) { 
+        // check if passwords match
+        if (createPasswordInput.value !== repeatPasswordInput.value) {
+            createPasswordError.textContent = "Passwords do not match.";
+            createPasswordError.style.opacity = 1;
+            repeatPasswordError.textContent = "Passwords do not match.";
+            repeatPasswordError.style.opacity = 1;
+            return;
+        }
+        else{
+            createPasswordError.textContent = "";
+            createPasswordError.style.opacity = 0;
+            repeatPasswordError.textContent = "";
+            repeatPasswordError.style.opacity = 0; 
+        }
     });
 });

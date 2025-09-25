@@ -24,6 +24,23 @@ def login():
 def create():
 	return render_template("create_account.html")
 
+# add account to db
+@app.route('/create_account', methods=['POST'])
+def create_account():
+	email = request.form['email']
+	password = request.form['createpassword']
+	role = 'teacher'  # default role
+
+	hashed = db.hash_password(password)
+
+	print(email, hashed, role, len([email, hashed, role]))
+	try:
+		db.insertRows(table='users', columns=['Email', 'Password_Hash', 'Role'], parameters=[[email, hashed, role]])
+	except Exception as e:
+		return jsonify({'error': str(e)}), 400
+	
+	return redirect('/home')
+
 ### home page ###
 
 # home page
