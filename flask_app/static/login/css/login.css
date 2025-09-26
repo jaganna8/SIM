@@ -71,6 +71,22 @@ body {
     outline: none;
 }
 
+.input-wrapper select{
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px 8px 16px;
+    color: #1e293b;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    width: 100%;
+    outline: none;
+    height: 40px;
+    -webkit-appearance: none; /* Remove default styling in WebKit browsers */
+    -moz-appearance: none; /* Remove default styling in Firefox */
+    appearance: none; /* Remove default styling in modern browsers */
+}
+
 .input-wrapper input::placeholder {
     color: transparent;
 }
@@ -98,6 +114,22 @@ body {
     transform: translateY(-8px) scale(0.75);
     color: #6366f1;
     font-weight: 500;
+}
+
+.input-wrapper select:focus,
+.input-wrapper select:valid,
+.input-wrapper select.has-value {
+    border-color: #6366f1;
+}
+
+.input-wrapper select:focus + label,
+.input-wrapper select:valid + label,
+.input-wrapper select.has-value + label {
+    transform: translateY(-8px) scale(0.75);
+    color: #6366f1;
+    font-weight: 500;
+    opacity: 1;
+    pointer-events: none;
 }
 
 /* Password Toggle */
