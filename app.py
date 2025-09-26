@@ -49,9 +49,9 @@ def create_account():
 
 	hashed = db.hash_password(password)
 
-	print(email, hashed, role, len([email, hashed, role]))
 	try:
 		db.insertRows(table='users', columns=['Email', 'Password_Hash', 'Role'], parameters=[[email, hashed, role]])
+		print(db.query("SELECT * FROM users"))
 	except Exception as e:
 		return jsonify({'error': str(e)}), 400
 	

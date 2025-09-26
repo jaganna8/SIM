@@ -22,6 +22,16 @@
             <p>View your account details.</p>
         </div>
 
+        <div class="contentWrapper">
+            <div class="accountInfo">
+                <p><strong>Email:</strong> {{ user[0]['Email'] }}</p>
+                <p><strong>Role:</strong> {{ user[0]['Role'] }}</p>
+            </div>
+        </div>
+
+        <form action="/logout">
+            <input type="submit" value="Logout">
+        </form>
         
     </main>
 </body>
