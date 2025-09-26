@@ -125,3 +125,9 @@ class database:
         # Using PBKDF2-HMAC-SHA256 for password hashing
         dk = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
         return base64.b64encode(dk).decode('utf-8')
+    
+    def check_password(self, password: str, hashed: str) -> bool:
+        """
+        Checks if the provided password matches the hashed password.
+        """
+        return self.hash_password(password) == hashed

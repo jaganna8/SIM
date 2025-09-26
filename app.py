@@ -25,6 +25,21 @@ def login():
 def create():
 	return render_template("create_account.html")
 
+# login account
+@app.route('/login_account', methods=['POST'])
+def login_account():
+	email = request.form['email']
+	password = request.form['password']
+
+	user = db.query("SELECT * FROM users WHERE Email = %s", (email,))
+
+	if not user or not db.check_password(password, user[0]['Password_Hash']):
+		return jsonify({'error': 'Invalid email or password'}), 401
+	
+	session['user'] = email
+
+	return redirect('/home')
+
 # add account to db
 @app.route('/create_account', methods=['POST'])
 def create_account():
@@ -37,7 +52,6 @@ def create_account():
 	print(email, hashed, role, len([email, hashed, role]))
 	try:
 		db.insertRows(table='users', columns=['Email', 'Password_Hash', 'Role'], parameters=[[email, hashed, role]])
-		print(db.query("SELECT * FROM users"))
 	except Exception as e:
 		return jsonify({'error': str(e)}), 400
 	
@@ -45,7 +59,7 @@ def create_account():
 
 	return redirect('/home')
 
-### home page ###
+### main page other routes ###
 
 def login_required(f):
     @wraps(f)
@@ -54,6 +68,13 @@ def login_required(f):
             return redirect('/login')
         return f(*args, **kwargs)
     return wrapper
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/login')
+
+### home page ###
 
 # home page
 @app.route('/home')
@@ -337,7 +358,13 @@ def getCurrClasses():
 	
 	return jsonify({"classes": classes_html})
 
-
+### account page ###
+@app.route('/account')
+@login_required
+def account():
+	email = session['user']
+	user = db.query("SELECT Email, Role FROM users WHERE Email = %s", (email,))
+	return render_template("account.html", user = user)
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int("8080"), debug=True)

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/account/css/account.css">
+    <link rel="stylesheet" href="../static/home/style/navbar.css">
+    <script src="https://kit.fontawesome.com/683901d729.js" crossorigin="anonymous"></script>
+    <title> Account Information </title>
+</head>
+
+<body>
+    <nav class="mainNav">
+        <a href="{{ url_for('home') }}"> <i class="fa-solid fa-house"></i> Home </a>
+        <a href="{{ url_for('student') }}"> <i class="fa-solid fa-magnifying-glass"></i> Student Search </a>
+        <a class="active" href="{{ url_for('account')}}"> <i class="fa-solid fa-user"></i> Account</a>
+    </nav>
+
+    <main class="mainContent">
+        <div id="accountHeader">
+            <h1>Account</h1>
+            <p>View your account details.</p>
+        </div>
+
+        
+    </main>
+</body>
