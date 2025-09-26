@@ -1,8 +1,9 @@
-from flask import Flask, render_template, redirect, request, jsonify
-import mysql.connector
+from flask import Flask, render_template, redirect, request, jsonify, session
 from flask_app.utils.database.database import database
+from functools import wraps
 
 app = Flask(__name__, template_folder='flask_app/templates', static_folder='flask_app/static')
+app.secret_key = 'a-very-secret-key'
 db = database()
 db.createTables()
 
@@ -29,22 +30,34 @@ def create():
 def create_account():
 	email = request.form['email']
 	password = request.form['createpassword']
-	role = 'teacher'  # default role
+	role = request.form['role']
 
 	hashed = db.hash_password(password)
 
 	print(email, hashed, role, len([email, hashed, role]))
 	try:
 		db.insertRows(table='users', columns=['Email', 'Password_Hash', 'Role'], parameters=[[email, hashed, role]])
+		print(db.query("SELECT * FROM users"))
 	except Exception as e:
 		return jsonify({'error': str(e)}), 400
 	
+	session['user'] = email
+
 	return redirect('/home')
 
 ### home page ###
 
+def login_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if 'user' not in session:
+            return redirect('/login')
+        return f(*args, **kwargs)
+    return wrapper
+
 # home page
 @app.route('/home')
+@login_required
 def home():
 	count = db.query("SELECT COUNT(*) FROM students")[0]['COUNT(*)']
 
@@ -170,6 +183,7 @@ def filterStudents():
 # student page
 @app.route("/student")
 @app.route("/student/<int:student_id>")
+@login_required
 def student(student_id=None):
 	students = db.query(query="SELECT * FROM students ORDER BY Last_Name, First_Name")
 	return render_template("student.html", students=students, student_id=student_id)
