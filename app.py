@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, jsonify, session
+from flask import Flask, render_template, redirect, request, jsonify, session, flash
 from flask_app.utils.database.database import database
 from functools import wraps
 
@@ -32,6 +32,7 @@ def login_account():
 	password = request.form['password']
 
 	user = db.query("SELECT * FROM users WHERE Email = %s", (email,))
+	print(user)
 
 	if not user or not db.check_password(password, user[0]['Password_Hash']):
 		return jsonify({'error': 'Invalid email or password'}), 401
@@ -74,6 +75,8 @@ def logout():
     session.clear()
     return redirect('/login')
 
+
+
 ### home page ###
 
 # home page
@@ -82,7 +85,10 @@ def logout():
 def home():
 	count = db.query("SELECT COUNT(*) FROM students")[0]['COUNT(*)']
 
-	return render_template("home.html", count=count)
+	email = session['user']
+	user = db.query("SELECT Email, Role FROM users WHERE Email = %s", (email,))
+
+	return render_template("home.html", count=count, user = user)
 
 @app.route('/loadStudents')
 def loadStudents():
@@ -199,6 +205,8 @@ def filterStudents():
 	students = db.query(query, parameters=params)
 	return render_template('partials/student_table_body.html', students=students, base_gpa = base_gpa)
 
+
+
 ### student page ###
 
 # student page
@@ -207,7 +215,9 @@ def filterStudents():
 @login_required
 def student(student_id=None):
 	students = db.query(query="SELECT * FROM students ORDER BY Last_Name, First_Name")
-	return render_template("student.html", students=students, student_id=student_id)
+	email = session['user']
+	user = db.query("SELECT Email, Role FROM users WHERE Email = %s", (email,))
+	return render_template("student.html", students=students, student_id=student_id, user = user)
 
 # calculate student gpa
 def calcGPA(grades):
@@ -358,13 +368,41 @@ def getCurrClasses():
 	
 	return jsonify({"classes": classes_html})
 
+
+
 ### account page ###
+
 @app.route('/account')
 @login_required
 def account():
 	email = session['user']
 	user = db.query("SELECT Email, Role FROM users WHERE Email = %s", (email,))
 	return render_template("account.html", user = user)
+
+
+### admin tools page ###
+
+@app.route('/admin_tools')
+@login_required
+def admin_tools():
+	email = session['user']
+	user = db.query("SELECT Email, Role FROM users WHERE Email = %s", (email,))[0]
+
+	if user['Role'] != 'admin':
+		flash("You are not authorized to view Admin Tools.")
+		return redirect('/home')
+
+	return render_template("admin_tools.html", user = user)
+
+
+### teacher tools page ###
+@app.route('/teacher_tools')
+@login_required
+def teacher_tools():
+	email = session['user']
+	user = db.query("SELECT Email, Role FROM users WHERE Email = %s", (email,))
+
+	return render_template("teacher_tools.html", user = user)
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int("8080"), debug=True)

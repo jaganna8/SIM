@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="../static/account/css/account.css">
     <link rel="stylesheet" href="../static/home/style/navbar.css">
     <script src="https://kit.fontawesome.com/683901d729.js" crossorigin="anonymous"></script>
-    <title> Account Information </title>
+    <title> Admin Tools </title>
 </head>
 
 <body>
@@ -14,28 +14,14 @@
         <a href="{{ url_for('home') }}"> <i class="fa-solid fa-house"></i> Home </a>
         <a href="{{ url_for('student') }}"> <i class="fa-solid fa-magnifying-glass"></i> Student Search </a>
         <a href="{{ url_for('teacher_tools')}}"> <i class="fa-solid fa-chalkboard-user"></i> Teacher Tools</a>
-        {% if user[0]['Role'] == 'admin' %}
-            <a href="{{ url_for('admin_tools')}}"> <i class="fa-solid fa-user-secret"></i> Admin Tools</a>
-        {% endif %}
-        <a class="active" href="{{ url_for('account')}}"> <i class="fa-solid fa-user"></i> Account</a>
+        <a href="{{ url_for('admin_tools')}}"> <i class="fa-solid fa-user-secret"></i> Admin Tools</a>
+        <a href="{{ url_for('account')}}"> <i class="fa-solid fa-user"></i> Account</a>
     </nav>
 
     <main class="mainContent">
         <div id="accountHeader">
-            <h1>Account</h1>
-            <p>View your account details.</p>
+            <h1>Admin Tools</h1>
+            <p>Tools for admin</p>
         </div>
-
-        <div class="contentWrapper">
-            <div class="accountInfo">
-                <p><strong>Email:</strong> {{ user[0]['Email'] }}</p>
-                <p><strong>Role:</strong> {{ user[0]['Role'] }}</p>
-            </div>
-        </div>
-
-        <form action="/logout">
-            <input type="submit" value="Logout">
-        </form>
-        
     </main>
 </body>

@@ -16,6 +16,10 @@
     <nav class="mainNav">
         <a href="{{ url_for('home') }}"> <i class="fa-solid fa-house"></i> Home </a>
         <a class="active" href="{{ url_for('student') }}"> <i class="fa-solid fa-magnifying-glass"></i> Student Search </a>
+        <a href="{{ url_for('teacher_tools')}}"> <i class="fa-solid fa-chalkboard-user"></i> Teacher Tools</a>
+        {% if user[0]['Role'] == 'admin' %}
+            <a href="{{ url_for('admin_tools')}}"> <i class="fa-solid fa-user-secret"></i> Admin Tools</a>
+        {% endif %}
         <a href="{{ url_for('account')}}"> <i class="fa-solid fa-user"></i> Account</a>
     </nav>
 
