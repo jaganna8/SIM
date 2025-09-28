@@ -18,7 +18,7 @@ class database:
         self.user     = os.environ.get('DB_USER', 'root')
         self.port     = int(os.environ.get('DB_PORT', 3306))
         self.password = os.environ.get('DB_PASSWORD', 'rootpass')
-        self.tables   = ['students', 'classes', 'attendance', 'finalgrades', 'current_context', 'expected_values', 'users']
+        self.tables   = ['students', 'classes', 'attendance', 'finalgrades', 'users']
         
         # NEW IN HW 3-----------------------------------------------------------------
         self.encryption     =  {   'oneway': {'salt' : b'averysaltysailortookalongwalkoffashortbridge',

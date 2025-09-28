@@ -1,9 +1,10 @@
 from flask import Flask, render_template, redirect, request, jsonify, session, flash
 from flask_app.utils.database.database import database
 from functools import wraps
+import config
 
 app = Flask(__name__, template_folder='flask_app/templates', static_folder='flask_app/static')
-app.secret_key = 'a-very-secret-key'
+app.secret_key = config.secret_key
 db = database()
 db.createTables()
 
@@ -92,7 +93,7 @@ def home():
 
 @app.route('/loadStudents')
 def loadStudents():
-	base_gpa = db.query("""SELECT Baseline_GPA from expected_values""")[0]['Baseline_GPA']
+	base_gpa = config.base_gpa
 
 	offset = int(request.args.get('offset', 0))
 	limit = int(request.args.get('limit', 50))
@@ -134,7 +135,7 @@ def loadStudents():
 # filter students on the home page table
 @app.route('/filterStudents')
 def filterStudents():
-	base_gpa = db.query("""SELECT Baseline_GPA from expected_values""")[0]['Baseline_GPA']
+	base_gpa = config.base_gpa
 
 	grades = request.args.getlist('grade')
 	grad_years = request.args.getlist('gradYear')
@@ -352,11 +353,12 @@ def getCurrClasses():
 	student_id = request.args.get("student_id")
 
 	if current_only:
-		con = db.query("SELECT School_Year, Term FROM current_context ORDER BY Updated_At DESC LIMIT 1")[0]
+		school_year = config.school_year
+		term = config.term
 		curr = db.query("""SELECT *
 			FROM classes
 			WHERE school_year = %s AND Term = %s AND Student_ID = %s
-			""", (con["School_Year"], con["Term"], student_id,))
+			""", (school_year, term, student_id,))
 	else:
 		curr = db.query("""SELECT *
 			FROM classes
