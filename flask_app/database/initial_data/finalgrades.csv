@@ -1,4 +1,4 @@
-﻿Student_ID,ID,Classes_ID,Letter_Grade,Grade_Level,Credit_Type,Credit_Awarded,Credit_Potential
+﻿Student_ID,ID,Class_ID,Letter_Grade,Grade_Level,Credit_Type,Credit_Awarded,Credit_Potential
 262969,21082692,1137468,D,9,OTHER,0.5,0.5
 262969,21082673,1137517,C,9,SCI,0.5,0.5
 262969,21078895,1137663,D,9,MTH,0.5,0.5

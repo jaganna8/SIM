@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `classes` (
   `ID`                INT(11)        NOT NULL AUTO_INCREMENT COMMENT 'Unique identifier for the class',
-  `Student_ID`        INT(11)        NOT NULL                COMMENT 'Reference to the student ID',
+  `Teacher_ID`        INT(11)        NOT NULL                COMMENT 'Reference to the teacher ID',
   `Start_Date`        DATE           NOT NULL                COMMENT 'Start date of the class',
   `End_Date`          DATE           NULL                    COMMENT 'End date of the class',
   `Possible_Credit`   DECIMAL(5, 2)  NOT NULL DEFAULT 0.00   COMMENT 'Possible credit for the class',
@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS `classes` (
   `Term`              VARCHAR(50)    NOT NULL                COMMENT 'Term (e.g., Fall, Spring)',
   `Status`            VARCHAR(50)    NOT NULL                COMMENT 'Status of the class (e.g., completed, in-progress)',
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`Student_ID`) REFERENCES `students`(`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`Student_ID`) REFERENCES `users`(`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Table for storing class information linked to students';
