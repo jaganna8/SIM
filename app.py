@@ -404,7 +404,10 @@ def teacher_tools():
 	email = session['user']
 	user = db.query("SELECT Email, Role FROM users WHERE Email = %s", (email,))
 
-	return render_template("teacher_tools.html", user = user)
+	courses = db.query("SELECT DISTINCT Course_Name FROM classes ORDER BY Course_Name")
+	course_names = [course['Course_Name'] for course in courses]
+
+	return render_template("teacher_tools.html", user = user, courses = course_names)
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int("8080"), debug=True)
