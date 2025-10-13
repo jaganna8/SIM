@@ -2,11 +2,27 @@ from flask import Flask, render_template, redirect, request, jsonify, session, f
 from flask_app.utils.database.database import database
 from functools import wraps
 import config
+import logging
 
 app = Flask(__name__, template_folder='flask_app/templates', static_folder='flask_app/static')
 app.secret_key = config.secret_key
 db = database()
 db.createTables()
+
+# Check if default admin exists
+admin_email = "admin@example.com"
+existing = db.query("SELECT * FROM users WHERE Email = %s", (admin_email,))
+
+if not existing:
+	# Hash the password using your existing method
+	admin_password = "AdminPass123"  # choose a secure default
+	hashed = db.hash_password(admin_password)
+
+	db.insertRows(
+		table="users",
+		columns=["Email", "Password_Hash", "Role"],
+		parameters=[[admin_email, hashed, "admin"]]
+	)
 
 # empty route
 @app.route('/')
@@ -89,6 +105,9 @@ def home():
 	email = session['user']
 	user = db.query("SELECT Email, Role FROM users WHERE Email = %s", (email,))
 
+	print(f"Session email: '{session['user']}'")
+	print(f"Query result: {user}")
+
 	return render_template("home.html", count=count, user = user)
 
 @app.route('/loadStudents')
@@ -125,7 +144,7 @@ def loadStudents():
 						
 		FROM students s
 		LEFT JOIN finalgrades fg ON fg.Student_ID = s.ID
-		LEFT JOIN classes c ON c.ID = fg.Classes_ID
+		LEFT JOIN classes c ON c.ID = fg.Class_ID
 		GROUP BY s.ID
 		ORDER BY s.Last_Name, s.First_Name
 		LIMIT %s OFFSET %s
@@ -196,7 +215,7 @@ def filterStudents():
             ) AS GPA
         FROM students s
         LEFT JOIN finalgrades fg ON fg.Student_ID = s.ID
-        LEFT JOIN classes c      ON c.ID = fg.Classes_ID
+        LEFT JOIN classes c      ON c.ID = fg.Class_ID
     """
 	if where_clauses:
 		query += " WHERE " + " AND ".join(where_clauses)
@@ -264,22 +283,23 @@ def loadStudentTables():
 			SELECT 
 				a.ID as attendance_ID,
 				a.Student_ID,
-				a.Classes_ID,
+				a.Class_ID,
 				a.`Date` as attendance_date,
 				a.Code,
 				c.Course_Name
 			FROM attendance a
-			JOIN classes c ON a.Classes_ID = c.ID
+			JOIN classes c ON a.Class_ID = c.ID
 			WHERE a.Student_ID = %s
 			ORDER BY c.Course_Name, attendance_date
 			""", (student_id,))
 		
 		# Classes
 		classes = db.query("""
-			SELECT *
-			FROM classes
-			WHERE Student_ID = %s
-			ORDER BY Course_Name
+			SELECT c.*
+			FROM classes c
+			JOIN enrollments e on e.Class_ID = c.ID
+			WHERE e.Student_ID = %s
+			ORDER BY c.Course_Name
 			""", (student_id,))
 
 		# Final Grades (with course name)
@@ -287,7 +307,7 @@ def loadStudentTables():
 			SELECT 
 				g.ID AS grade_id,
 				g.Student_ID,
-				g.Classes_ID,
+				g.Class_ID,
 				g.Letter_Grade,
 				g.Grade_Level,
 				g.Credit_Type,
@@ -295,7 +315,7 @@ def loadStudentTables():
 				g.Credit_Potential,
 				c.Course_Name
 			FROM finalgrades g
-			JOIN classes c ON g.Classes_ID = c.ID
+			JOIN classes c ON g.Class_ID = c.ID
 			WHERE g.Student_ID = %s
 			ORDER BY g.Grade_Level
 			""", (student_id,))
@@ -355,15 +375,17 @@ def getCurrClasses():
 	if current_only:
 		school_year = config.school_year
 		term = config.term
-		curr = db.query("""SELECT *
-			FROM classes
-			WHERE school_year = %s AND Term = %s AND Student_ID = %s
+		curr = db.query("""SELECT c.*
+			FROM classes c
+			JOIN enrollments e ON e.Class_ID = c.ID
+			WHERE c.school_year = %s AND c.Term = %s AND c.Student_ID = %s
 			""", (school_year, term, student_id,))
 	else:
-		curr = db.query("""SELECT *
-			FROM classes
-			WHERE Student_ID = %s
-			ORDER BY Course_Name
+		curr = db.query("""SELECT c.*
+			FROM classes c
+			JOIN enrollments e ON e.Class_ID = c.ID
+			WHERE e.Student_ID = %s
+			ORDER BY c.Course_Name
 			""", (student_id,))
 
 	classes_html = render_template("partials/classes_table_body.html", classes=curr)
@@ -404,10 +426,9 @@ def teacher_tools():
 	email = session['user']
 	user = db.query("SELECT Email, Role FROM users WHERE Email = %s", (email,))
 
-	courses = db.query("SELECT DISTINCT Course_Name FROM classes ORDER BY Course_Name")
-	course_names = [course['Course_Name'] for course in courses]
-
-	return render_template("teacher_tools.html", user = user, courses = course_names)
+	teacher = db.query("SELECT ID FROM users WHERE Email = %s", (email,))[0]
+	courses = db.query("SELECT Course_Name FROM classes WHERE Teacher_ID = %s", (teacher['ID'],))
+	return render_template("teacher_tools.html", user = user, courses = courses)
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int("8080"), debug=True)

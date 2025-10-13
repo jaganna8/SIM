@@ -18,7 +18,7 @@ class database:
         self.user     = os.environ.get('DB_USER', 'root')
         self.port     = int(os.environ.get('DB_PORT', 3306))
         self.password = os.environ.get('DB_PASSWORD', 'rootpass')
-        self.tables   = ['students', 'classes', 'attendance', 'finalgrades', 'users']
+        self.tables   = ['students', 'users', 'classes', 'enrollment', 'attendance', 'finalgrades']
         
         # NEW IN HW 3-----------------------------------------------------------------
         self.encryption     =  {   'oneway': {'salt' : b'averysaltysailortookalongwalkoffashortbridge',
@@ -60,7 +60,7 @@ class database:
         cnx.close()
         return row
 
-    def createTables(self, purge=True, data_path = 'flask_app/database/'):
+    def createTables(self, purge=False, data_path = 'flask_app/database/'):
         ''' FILL ME IN WITH CODE THAT CREATES YOUR DATABASE TABLES.'''
 
         #should be in order or creation - this matters if you are using forign keys.
@@ -72,28 +72,15 @@ class database:
         # Execute all SQL queries in the /database/create_tables directory.
         for table in self.tables:
             
-            #Create each table using the .sql file in /database/create_tables directory.
-            with open(data_path + f"create_tables/{table}.sql") as read_file:
-                create_statement = read_file.read()
-            self.query(create_statement)
-
-            # Import the initial data
+            sql_path = os.path.join(data_path, f"create_tables/{table}.sql")
             try:
-                params = []
-                with open(data_path + f"initial_data/{table}.csv", encoding='utf-8-sig') as read_file:
-                    scsv = read_file.read()            
-                for row in csv.reader(StringIO(scsv), delimiter=','):
-                    params.append(row)
-            
-                # Insert the data
-                cols = params[0]; params = params[1:] 
-                self.insertRows(table = table,  columns = cols, parameters = params)
-            # except:
-            #     print('no initial data')
-            except FileNotFoundError as e:
-                print(f"File not found for table {table}: {e}")
+                with open(sql_path, 'r') as file:
+                    sql_script = file.read()
+                    self.query(sql_script)
+            except FileNotFoundError:
+                print(f"SQL file for table '{table}' not found at path: {sql_path}")
             except Exception as e:
-                print(f"Error importing data for table {table}: {e}")
+                print(f"An error occurred while creating table '{table}': {e}")
 
     def insertRows(self, table='table', columns=['x','y'], parameters=[['v11','v12'],['v21','v22']]):
         
