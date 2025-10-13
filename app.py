@@ -7,8 +7,7 @@ import logging
 app = Flask(__name__, template_folder='flask_app/templates', static_folder='flask_app/static')
 app.secret_key = config.secret_key
 db = database()
-db.create_tables()
-db.seed_database()
+db.build_db()
 
 # empty route
 @app.route('/')

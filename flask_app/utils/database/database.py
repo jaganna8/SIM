@@ -7,7 +7,8 @@ from math import pow
 import os
 import hashlib
 import base64
-
+from datetime import datetime, timedelta
+import random
 
 class database:
 
@@ -29,6 +30,11 @@ class database:
                                 'reversible': { 'key' : '7pK_fnSKIjZKuv_Gwc--sZEMKn2zc8VvD6zS96XcNHE='}
                                 }
         #-----------------------------------------------------------------------------
+
+    def build_db(self):
+        self.create_tables()
+        self.seed_database()
+
 
     def query(self, query = "SELECT * FROM students", parameters = None):
 
@@ -120,7 +126,7 @@ class database:
         return self.hash_password(password) == hashed
     
     def seed_database(self):
-        # Check if default admin exists
+        # add a default admin user if one does not exist
         admin_email = "admin@example.com"
         existing = self.query("SELECT * FROM users WHERE Email = %s", (admin_email,))
 
@@ -133,4 +139,44 @@ class database:
                 table="users",
                 columns=["Email", "Password_Hash", "Role"],
                 parameters=[[admin_email, hashed, "admin"]]
+            )
+
+        #add a default teacher user if one does not exist
+        teacher_email = "teacher@example.com"
+        teacher_password = self.hash_password("TeacherPass123")
+        existing = self.query("SELECT * FROM users WHERE Email = %s", (teacher_email,))
+        if not existing:
+            self.insert_rows(
+                table="users",
+                columns=["Email", "Password_Hash", "Role"],
+                parameters=[[teacher_email, teacher_password, "teacher"]]
+            )
+
+        #add sample students
+        students = [
+            ["Alice", "Johnson", "9", "2028", "F", "Wood HS", 0, 1],
+            ["Bob", "Smith", "10", "2027", "M", "Unified HS", 0, 0],
+            ["Charlie", "Lee", "11", "2026", "M", "Green HS", 1, 0],
+            ["Diana", "Garcia", "12", "2025", "F", "Wood HS", 1, 1]
+        ]
+        
+        for student in students:
+            self.insert_rows(
+                table="students",
+                columns=["First_Name", "Last_Name", "Grade", "Expected_Graduation", "Gender",
+                         "School", "Flag_FosterCare", "Flag_EnglishLanguageLearner"], parameters=[student]
+            )
+            
+        #add sample classes
+        teacher_id = self.query("SELECT ID FROM users WHERE Email = %s", (teacher_email,))[0]['ID']
+        classes = [
+            [teacher_id, "2025-09-01", "2026-06-01", 1.0, "Core", "Math 101", 2025, "Fall", "in-progress"],
+            [teacher_id, "2025-09-01", "2026-06-01", 1.0, "Core", "English 101", 2025, "Fall", "in-progress"]
+        ]
+
+        for c in classes: 
+            self.insert_rows(
+                table="classes",
+                columns=["Teacher_ID", "Start_Date", "End_Date", "Possible_Credit", "Credit_Type",
+                         "Course_Name", "School_Year", "Term", "Status"], parameters=[c]
             )
