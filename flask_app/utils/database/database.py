@@ -60,7 +60,7 @@ class database:
         cnx.close()
         return row
 
-    def createTables(self, purge=False, data_path = 'flask_app/database/'):
+    def create_tables(self, purge=False, data_path = 'flask_app/database/'):
         ''' FILL ME IN WITH CODE THAT CREATES YOUR DATABASE TABLES.'''
 
         #should be in order or creation - this matters if you are using forign keys.
@@ -82,7 +82,7 @@ class database:
             except Exception as e:
                 print(f"An error occurred while creating table '{table}': {e}")
 
-    def insertRows(self, table='table', columns=['x','y'], parameters=[['v11','v12'],['v21','v22']]):
+    def insert_rows(self, table='table', columns=['x','y'], parameters=[['v11','v12'],['v21','v22']]):
         
         # Check if there are multiple rows present in the parameters
         has_multiple_rows = any(isinstance(el, list) for el in parameters)
@@ -118,3 +118,19 @@ class database:
         Checks if the provided password matches the hashed password.
         """
         return self.hash_password(password) == hashed
+    
+    def seed_database(self):
+        # Check if default admin exists
+        admin_email = "admin@example.com"
+        existing = self.query("SELECT * FROM users WHERE Email = %s", (admin_email,))
+
+        if not existing:
+            # Hash the password using your existing method
+            admin_password = "AdminPass123"  # choose a secure default
+            hashed = self.hash_password(admin_password)
+
+            self.insert_rows(
+                table="users",
+                columns=["Email", "Password_Hash", "Role"],
+                parameters=[[admin_email, hashed, "admin"]]
+            )

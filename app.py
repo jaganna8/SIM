@@ -7,22 +7,8 @@ import logging
 app = Flask(__name__, template_folder='flask_app/templates', static_folder='flask_app/static')
 app.secret_key = config.secret_key
 db = database()
-db.createTables()
-
-# Check if default admin exists
-admin_email = "admin@example.com"
-existing = db.query("SELECT * FROM users WHERE Email = %s", (admin_email,))
-
-if not existing:
-	# Hash the password using your existing method
-	admin_password = "AdminPass123"  # choose a secure default
-	hashed = db.hash_password(admin_password)
-
-	db.insertRows(
-		table="users",
-		columns=["Email", "Password_Hash", "Role"],
-		parameters=[[admin_email, hashed, "admin"]]
-	)
+db.create_tables()
+db.seed_database()
 
 # empty route
 @app.route('/')
