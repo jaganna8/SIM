@@ -1,0 +1,7 @@
+Email,Password_Hash,Role
+teacher1@example.com,CYFFEc+m3/CjD1uFmRwxkqSfgnroCe1pysfy3nI697Y=,teacher
+teacher2@example.com,CYFFEc+m3/CjD1uFmRwxkqSfgnroCe1pysfy3nI697Y=,teacher
+teacher3@example.com,CYFFEc+m3/CjD1uFmRwxkqSfgnroCe1pysfy3nI697Y=,teacher
+teacher4@example.com,CYFFEc+m3/CjD1uFmRwxkqSfgnroCe1pysfy3nI697Y=,teacher
+teacher5@example.com,CYFFEc+m3/CjD1uFmRwxkqSfgnroCe1pysfy3nI697Y=,teacher
+admin@email.com,CYFFEc+m3/CjD1uFmRwxkqSfgnroCe1pysfy3nI697Y=,admin

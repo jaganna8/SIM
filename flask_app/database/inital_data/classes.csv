@@ -1,0 +1,6 @@
+Teacher_ID,Start_Date,End_Date,Possible_Credit,Credit_Type,Course_Name,School_Year,Term,Status
+1,2024-09-01,2024-12-20,0.72,ELA,English 10,2025,Fall,completed
+2,2025-01-10,2025-06-05,0.6,MTH,Algebra I,2025,Spring,completed
+3,2025-01-10,2025-06-05,1.28,SCI,Biology,2025,Spring,completed
+4,2024-09-01,2024-12-20,1.16,SS,World History,2025,Fall,in-progress
+5,2025-01-10,2025-06-05,1.39,ART,Digital Art,2025,Spring,in-progress

@@ -53,7 +53,7 @@ def create_account():
 	hashed = db.hash_password(password)
 
 	try:
-		db.insertRows(table='users', columns=['Email', 'Password_Hash', 'Role'], parameters=[[email, hashed, role]])
+		db.insert_rows(table='users', columns=['Email', 'Password_Hash', 'Role'], parameters=[[email, hashed, role]])
 		print(db.query("SELECT * FROM users"))
 	except Exception as e:
 		return jsonify({'error': str(e)}), 400
@@ -282,7 +282,7 @@ def loadStudentTables():
 		classes = db.query("""
 			SELECT c.*
 			FROM classes c
-			JOIN enrollments e on e.Class_ID = c.ID
+			JOIN enrollment e on e.Class_ID = c.ID
 			WHERE e.Student_ID = %s
 			ORDER BY c.Course_Name
 			""", (student_id,))
@@ -362,13 +362,13 @@ def getCurrClasses():
 		term = config.term
 		curr = db.query("""SELECT c.*
 			FROM classes c
-			JOIN enrollments e ON e.Class_ID = c.ID
+			JOIN enrollment e ON e.Class_ID = c.ID
 			WHERE c.school_year = %s AND c.Term = %s AND c.Student_ID = %s
 			""", (school_year, term, student_id,))
 	else:
 		curr = db.query("""SELECT c.*
 			FROM classes c
-			JOIN enrollments e ON e.Class_ID = c.ID
+			JOIN enrollment e ON e.Class_ID = c.ID
 			WHERE e.Student_ID = %s
 			ORDER BY c.Course_Name
 			""", (student_id,))

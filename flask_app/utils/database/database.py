@@ -126,57 +126,44 @@ class database:
         return self.hash_password(password) == hashed
     
     def seed_database(self):
-        # add a default admin user if one does not exist
-        admin_email = "admin@example.com"
-        existing = self.query("SELECT * FROM users WHERE Email = %s", (admin_email,))
+        data_path = 'flask_app/database/inital_data/'
+        for table in self.tables:
+            csv_file = os.path.join(data_path, f"{table}.csv")
+            if os.path.exists(csv_file):
+                self.import_from_csv(table, csv_file)
+            else:
+                print(f"⚠️ CSV file for table '{table}' not found at: {csv_file}")
 
-        if not existing:
-            # Hash the password using your existing method
-            admin_password = "AdminPass123"  # choose a secure default
-            hashed = self.hash_password(admin_password)
+    def import_from_csv(self, table_name: str, file_path: str):
+        """
+        Imports data from a CSV file into the given table.
 
-            self.insert_rows(
-                table="users",
-                columns=["Email", "Password_Hash", "Role"],
-                parameters=[[admin_email, hashed, "admin"]]
-            )
+        Args:
+            table_name (str): The table name to import into.
+            file_path (str): Full path to the CSV file.
+        """
+        if not os.path.exists(file_path):
+            print(f"❌ File not found: {file_path}")
+            return
 
-        #add a default teacher user if one does not exist
-        teacher_email = "teacher@example.com"
-        teacher_password = self.hash_password("TeacherPass123")
-        existing = self.query("SELECT * FROM users WHERE Email = %s", (teacher_email,))
-        if not existing:
-            self.insert_rows(
-                table="users",
-                columns=["Email", "Password_Hash", "Role"],
-                parameters=[[teacher_email, teacher_password, "teacher"]]
-            )
+        try:
+            with open(file_path, newline='', encoding='utf-8') as csvfile:
+                reader = csv.reader(csvfile)
+                headers = next(reader)  # first row = column names
+                rows = [row for row in reader if any(row)]  # skip empty lines
 
-        #add sample students
-        students = [
-            ["Alice", "Johnson", "9", "2028", "F", "Wood HS", 0, 1],
-            ["Bob", "Smith", "10", "2027", "M", "Unified HS", 0, 0],
-            ["Charlie", "Lee", "11", "2026", "M", "Green HS", 1, 0],
-            ["Diana", "Garcia", "12", "2025", "F", "Wood HS", 1, 1]
-        ]
-        
-        for student in students:
-            self.insert_rows(
-                table="students",
-                columns=["First_Name", "Last_Name", "Grade", "Expected_Graduation", "Gender",
-                         "School", "Flag_FosterCare", "Flag_EnglishLanguageLearner"], parameters=[student]
-            )
-            
-        #add sample classes
-        teacher_id = self.query("SELECT ID FROM users WHERE Email = %s", (teacher_email,))[0]['ID']
-        classes = [
-            [teacher_id, "2025-09-01", "2026-06-01", 1.0, "Core", "Math 101", 2025, "Fall", "in-progress"],
-            [teacher_id, "2025-09-01", "2026-06-01", 1.0, "Core", "English 101", 2025, "Fall", "in-progress"]
-        ]
+                if not rows:
+                    print(f"⚠️ No data found in {file_path}")
+                    return
 
-        for c in classes: 
-            self.insert_rows(
-                table="classes",
-                columns=["Teacher_ID", "Start_Date", "End_Date", "Possible_Credit", "Credit_Type",
-                         "Course_Name", "School_Year", "Term", "Status"], parameters=[c]
-            )
+                # Insert rows into the table using your existing insert_rows() method
+                self.insert_rows(
+                    table=table_name,
+                    columns=headers,
+                    parameters=rows
+                )
+
+                print(f"✅ Imported {len(rows)} records into '{table_name}' from {os.path.basename(file_path)}")
+
+        except Exception as e:
+            print(f"❌ Error importing {file_path} into {table_name}: {e}")
