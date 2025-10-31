@@ -415,5 +415,25 @@ def teacher_tools():
 	courses = db.query("SELECT Course_Name FROM classes WHERE Teacher_ID = %s", (teacher['ID'],))
 	return render_template("teacher_tools.html", user = user, courses = courses)
 
+@app.route("/add_student", methods = ['POST'])
+@login_required
+def add_student():
+	print(db.query("SELECT * FROM students"))
+
+	first_name = request.form.get("add_student_fn")
+	last_name = request.form.get("add_student_ln")
+	grade = request.form.get("add_student_grade")
+	graduation_year = request.form.get("add_student_grad_year")
+	gender = request.form.get("add_student_gender")
+	school = request.form.get("add_student_school")
+	foster_care = request.form.get("add_student_fc") == "on"
+	ell = request.form.get("add_student_ell") == "on"
+
+	columns = ['First_Name', 'Last_Name', 'Grade', 'Expected_Graduation', 'Gender', 'School', 'Flag_FosterCare', 'Flag_EnglishLanguageLearner']
+
+	db.insert_rows(table="students", columns=columns, parameters=[[first_name, last_name, grade, graduation_year, gender, school, foster_care, ell]])
+
+	return redirect('/admin_tools')
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=int("8080"), debug=True)

@@ -1,0 +1,165 @@
+main{
+    margin-left: 200px;
+    padding: 25px;
+}
+
+#homeHeader h1{
+    font-size: 48px;
+    margin-bottom: 5px;
+}
+
+.addStudent {
+    width: 100%;
+    max-width: 500px;
+    margin: 0;
+    background: transparent;
+    text-align: left;
+}
+
+.addStudent h2 {
+    /* font-size: 1.875rem;
+    font-weight: 700; */
+    color: #1e293b;
+    text-align: left;
+}
+
+/* Form layout */
+.addStudent form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Input and Select Fields */
+.addStudent label {
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.addStudent input[type="text"],
+.addStudent select {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 16px;
+    color: #1e293b;
+    transition: all 0.2s ease;
+    width: 100%;
+    outline: none;
+}
+
+.addStudent input[type="text"]:focus,
+.addStudent select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3);
+}
+
+/* Checkbox Styles */
+.addStudent input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox-wrapper label {
+    color: #64748b;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox-wrapper .checkmark {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.addStudent input[type="checkbox"]:checked + label .checkmark {
+    background: #6366f1;
+    border-color: #6366f1;
+}
+
+.addStudent input[type="checkbox"]:checked + label .checkmark::after {
+    content: '✓';
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* Submit Button */
+.addStudent button {
+    width: fit-content;
+    background: #6366f1;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 14px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 12px;
+}
+
+.addStudent button:hover {
+    background: #4f46e5;
+}
+
+.addStudent button:active {
+    transform: translateY(1px);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .addStudent {
+        padding: 10px;
+    }
+    .addStudent button {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}
+
+
+
+.dropdown-content {
+    display: none;
+}
+
+.dropdown-content.show {
+    display: block;
+    margin-left: 20px;
+}
+
+.dropdown-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-header i {
+    margin-left: 5px;
+    transition: transform 0.2s ease;
+}
+
+/* Rotate the caret when open */
+.dropdown-header.active i {
+    transform: rotate(180deg);
+}

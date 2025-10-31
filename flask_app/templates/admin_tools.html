@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/account/css/account.css">
+    <link rel="stylesheet" href="../static/admin/css/admin.css">
     <link rel="stylesheet" href="../static/home/style/navbar.css">
+    <script src="../static/admin/js/admin.js"></script>
     <script src="https://kit.fontawesome.com/683901d729.js" crossorigin="anonymous"></script>
     <title> Admin Tools </title>
 </head>
@@ -26,11 +27,71 @@
 
         <div class="contentWrapper">
             <div class="addStudent">
-                <h2>Add student</h2>
+                <h2 class="dropdown-header">Add student <i class="fa-solid fa-caret-down"></i> </h2>
+                    <div class="dropdown-content">
+                        <form method="POST" action = "/add_student">
+                            <label for="first_name">First Name</label>
+                            <input type="text" id="first_name" name = "add_student_fn">
+
+                            <label for="last_name">Last Name</label>
+                            <input type="text" id="last_name" name = "add_student_ln">
+
+                            <label for="student_grade">Grade</label>
+                            <select name="add_student_grade" id="student_grade">
+                                <option value=""></option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+
+                            <label for="graduation_year">Graduation Year</label>
+                            <select name="add_student_grad_year" id="graduation_year">
+                                <option value=""></option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                            </select>
+
+                            <label for="student_gender">Gender</label>
+                            <select name="add_student_gender" id="student_gender">
+                                <option value=""></option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+
+                            <label for="student_school">School</label>
+                            <select name="add_student_school" id="student_school">
+                                <option value=""></option>
+                                <option value="Wood HS">Wood HS</option>
+                                <option value="Unified HS">Unified HS</option>
+                                <option value="Green HS">Green HS</option>
+                            </select>
+                            
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="foster_care" name = "add_student_fc">
+                                <label for="foster_care">
+                                    <span class="checkmark"></span> Foster Care
+                                </label>
+                            </div>
+
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="ELL" name = "add_student_ell">
+                                <label for="ELL">
+                                    <span class="checkmark"></span> English Language Learner
+                                </label>
+                            </div>
+                            
+                            <button type="submit">Add Student</button>
+                        </form>
+                    </div>
             </div>
+
             <div class="addTeacher">
                 <h2>Add teacher</h2>
             </div>
+
             <div class="addClass">
                 <h2>Add class</h2>
             </div>
