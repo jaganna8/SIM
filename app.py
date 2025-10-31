@@ -3,6 +3,7 @@ from flask_app.utils.database.database import database
 from functools import wraps
 import config
 import logging
+from datetime import datetime
 
 app = Flask(__name__, template_folder='flask_app/templates', static_folder='flask_app/static')
 app.secret_key = config.secret_key
@@ -441,6 +442,32 @@ def add_teacher():
 
 	db.insert_rows(table="users", columns=['Email', 'Password_Hash', 'Role'], parameters=[[email, db.hash_password(password), 'teacher']])
 
+	return redirect('/admin_tools')
+
+
+@app.route("/add_class", methods = ['POST'])
+@login_required
+def add_class():
+	course_name = request.form.get("add_class_name")
+	teacher_email = request.form.get("add_class_teacher")
+	start_date = request.form.get("add_start_date")
+	end_date = request.form.get("add_end_date")
+	term = request.form.get("add_class_term")
+	school_year = request.form.get("add_class_year")
+	credit_type = request.form.get("add_credit_type")
+	possible_credit = request.form.get("add_possible_credit")
+	status = request.form.get("add_class_status")
+
+	start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+	end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+	school_year = int(school_year)
+	possible_credit = float(possible_credit)
+
+	teacher_id = db.query("SELECT ID FROM users WHERE Email = %s", (teacher_email,))[0]['ID']
+
+	db.insert_rows(table="classes", columns=['Course_Name', 'Teacher_ID', 'Start_Date', 'End_Date', 'Term', 'School_Year', 'Credit_Type', 'Possible_Credit', 'Status'],
+				parameters=[[course_name, teacher_id, start_date, end_date, term, school_year, credit_type, possible_credit, status]])
+	
 	return redirect('/admin_tools')
 
 if __name__ == '__main__':

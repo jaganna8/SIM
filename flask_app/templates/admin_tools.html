@@ -90,7 +90,57 @@
 
             <div class="addClass">
                 <h2 class="dropdown-header">Add class <i class="fa-solid fa-caret-down"></i> </h2>
-                <div class="dropdown-content"></div>
+                <div class="dropdown-content">
+                    <form method="POST" action="/add_class">
+                        <label for="class_name">Class Name</label>
+                        <input type="text" id="class_name" name="add_class_name">
+
+                        <label for="class_teacher">Assigned Teacher Email</label>
+                        <input type="text" id="class_teacher" name="add_class_teacher">
+
+                        <label for="class_start_date">Start Date</label>
+                        <input type="date" id="class_start_date" name="add_start_date">
+
+                        <label for="class_end_date">End Date</label>
+                        <input type="date" id="class_end_date" name="add_end_date">
+
+                        <label for="class_year">Year</label>
+                        <input type="text" id="class_year" name="add_class_year">
+
+                        <label for="class_term">Term</label>
+                        <select name="add_class_term" id="class_term">
+                            <option value=""></option>
+                            <option value="Fall">Fall</option>
+                            <option value="Spring">Spring</option>
+                            <option value="YR">YR</option>
+                        </select>
+
+                        <label for="credit_type">Credit Type</label>
+                        <select name="add_credit_type" id="credit_type">
+                            <option value=""></option>
+                            <option value="ELA">ELA</option>
+                            <option value="MTH">MTH</option>
+                            <option value="SCI">ELA</option>
+                            <option value="SS">SS</option>
+                            <option value="LANG">LANG</option>
+                            <option value="ART">ART</option>
+                            <option value="PE">PE</option>
+                            <option value="OTHER">OTHER</option>
+                        </select>
+
+                        <label for="possible_credit">Possible Credit</label>
+                        <input type="text" id="possible_credit" name="add_possible_credit">
+
+                        <label for="class_status">Status</label>
+                        <select name="add_class_status" id="class_status">
+                            <option value=""></option>
+                            <option value="in-progress">In-Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+
+                        <button type="submit">Add Class</button>
+                    </form>
+                </div>
             </div>
 
             <div class="addTeacher">
