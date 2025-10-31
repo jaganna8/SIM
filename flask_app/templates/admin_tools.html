@@ -88,12 +88,24 @@
                     </div>
             </div>
 
-            <div class="addTeacher">
-                <h2>Add teacher</h2>
+            <div class="addClass">
+                <h2 class="dropdown-header">Add class <i class="fa-solid fa-caret-down"></i> </h2>
+                <div class="dropdown-content"></div>
             </div>
 
-            <div class="addClass">
-                <h2>Add class</h2>
+            <div class="addTeacher">
+                <h2 class="dropdown-header">Add teacher <i class="fa-solid fa-caret-down"></i> </h2>
+                <div class="dropdown-content">
+                    <form method="POST" action="/add_teacher">
+                        <label for="add_teacher_email">Email</label>
+                        <input type="text" id="teacher_email" name="add_teacher_email">
+
+                        <label for="add_teacher_password">Password</label>
+                        <input type="password" id="teacher_password" name="add_teacher_password">
+
+                        <button type="submit">Add Teacher</button>
+                    </form>
+                </div>
             </div>
         </div>
     </main>

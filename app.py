@@ -418,8 +418,6 @@ def teacher_tools():
 @app.route("/add_student", methods = ['POST'])
 @login_required
 def add_student():
-	print(db.query("SELECT * FROM students"))
-
 	first_name = request.form.get("add_student_fn")
 	last_name = request.form.get("add_student_ln")
 	grade = request.form.get("add_student_grade")
@@ -432,6 +430,16 @@ def add_student():
 	columns = ['First_Name', 'Last_Name', 'Grade', 'Expected_Graduation', 'Gender', 'School', 'Flag_FosterCare', 'Flag_EnglishLanguageLearner']
 
 	db.insert_rows(table="students", columns=columns, parameters=[[first_name, last_name, grade, graduation_year, gender, school, foster_care, ell]])
+
+	return redirect('/admin_tools')
+
+@app.route("/add_teacher", methods = ['POST'])
+@login_required
+def add_teacher():
+	email = request.form.get("add_teacher_email")
+	password = request.form.get("add_teacher_password")
+
+	db.insert_rows(table="users", columns=['Email', 'Password_Hash', 'Role'], parameters=[[email, db.hash_password(password), 'teacher']])
 
 	return redirect('/admin_tools')
 

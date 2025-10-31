@@ -25,37 +25,5 @@
             <h1>Teacher Tools</h1>
             <p>Tools for teachers</p>
         </div>
-
-        <div class="contentWrapper">
-            <div class="attendanceTool">
-                <h2>Mark Attendance</h2>
-                <form action="/mark_attendance" method="POST">
-                    <label for="course">Course Name</label>
-                    <select id="course" name="course_name" required>
-                        <option value="" disabled selected>Select a course</option>
-                        {% for course in courses %}
-                            <option value="{{ course }}">{{ course }}</option>
-                        {% endfor %}
-                    </select>
-
-                    <label for="date">Date</label>
-                    <input type="date" id="date" name="date" required>
-
-
-                    <label for="status">Status</label>
-                    <select id="status" name="status" required>
-                        <option value="Present">Present</option>
-                        <option value="Absent">Absent</option>
-                    </select>
-
-                    <button type="submit">Submit</button>
-                </form>
-            </div>
-
-            <div class="finalGradeTool">
-                <h2>Mark final grades</h2>
-            </div>
-
-        </div>
     </main>
 </body>
