@@ -16,6 +16,7 @@
             </div>
             
             <form class="login-form" id="loginForm" method = "POST" action = "/login_account">
+                <!-- email input -->
                 <div class="form-group">
                     <div class="input-wrapper">
                         <input type="email" id="email" name="email" required autocomplete="email">
@@ -24,6 +25,7 @@
                     <span class="error-message" id="emailError"></span>
                 </div>
 
+                <!-- password input -->
                 <div class="form-group">
                     <div class="input-wrapper password-wrapper">
                         <input type="password" id="password" name="password" required autocomplete="current-password">
@@ -35,20 +37,16 @@
                     <span class="error-message" id="passwordError"></span>
                 </div>
 
+                <!-- submit button -->
                 <button type="submit" class="login-btn">
                     <span class="btn-text">Sign In</span>
                     <span class="btn-loader"></span>
                 </button>
             </form>
 
+            <!-- sign up -->
             <div class="signup-link">
                 <p>Don't have an account? <a href="{{ url_for('create') }}">Create one</a></p>
-            </div>
-
-            <div class="success-message" id="successMessage">
-                <div class="success-icon">✓</div>
-                <h3>Login Successful!</h3>
-                <p>Redirecting to your dashboard...</p>
             </div>
         </div>
     </div>

@@ -21,6 +21,7 @@
     {% endif %}
     {% endwith %}
 
+    <!-- navigation bar -->
     <nav class="mainNav">
         <a class="active" href="{{ url_for('home') }}"> <i class="fa-solid fa-house"></i> Home </a>
         <a href="{{ url_for('student') }}"> <i class="fa-solid fa-magnifying-glass"></i> Student Search </a>
@@ -38,6 +39,7 @@
         </div>
 
         <div class="contentWrapper">
+            <!-- students table -->
             <div class="tableWrapper">
                 <h1>Students <span class="studentTableCount">({{ count }})</span></h1>
                 <table class="studentTable">
@@ -58,6 +60,7 @@
                 </table>
             </div>
             
+            <!-- filters -->
             <form method="get" action="{{ url_for('home') }}">
                 <div class="filterContent">
                     <h3>Filters</h3>

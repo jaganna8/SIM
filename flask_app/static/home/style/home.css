@@ -1,13 +1,16 @@
+/* main body style */
 main{
     margin-left: 200px;
     padding: 25px;
 }
 
+/* home page header style */
 #homeHeader h1{
     font-size: 48px;
     margin-bottom: 5px;
 }
 
+/* student table style */
 .studentTable, th, td{
     border: 1px solid;
     border-collapse: collapse;

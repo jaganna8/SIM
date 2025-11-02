@@ -5,6 +5,7 @@ import config
 import logging
 from datetime import datetime
 
+# start app and build db
 app = Flask(__name__, template_folder='flask_app/templates', static_folder='flask_app/static')
 app.secret_key = config.secret_key
 db = database()
@@ -65,6 +66,7 @@ def create_account():
 
 ### main page other routes ###
 
+# login required decorator
 def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -73,6 +75,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return wrapper
 
+# logout
 @app.route('/logout')
 def logout():
     session.clear()
@@ -416,6 +419,10 @@ def teacher_tools():
 	courses = db.query("SELECT Course_Name FROM classes WHERE Teacher_ID = %s", (teacher['ID'],))
 	return render_template("teacher_tools.html", user = user, courses = courses)
 
+
+### admin tools actions ###
+
+# add student, teacher, class
 @app.route("/add_student", methods = ['POST'])
 @login_required
 def add_student():

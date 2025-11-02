@@ -13,6 +13,7 @@
     <title>Student Search</title>
 </head>
 <body>
+    <!-- navigation bar -->
     <nav class="mainNav">
         <a href="{{ url_for('home') }}"> <i class="fa-solid fa-house"></i> Home </a>
         <a class="active" href="{{ url_for('student') }}"> <i class="fa-solid fa-magnifying-glass"></i> Student Search </a>
@@ -23,6 +24,7 @@
         <a href="{{ url_for('account')}}"> <i class="fa-solid fa-user"></i> Account</a>
     </nav>
 
+    <!-- main content -->
     <main>
         <div id="studentHeader">
             <h1>Student Search</h1>
@@ -30,6 +32,7 @@
         </div>
 
         <div class="contentWrapper">
+             <!-- select a student dropdown -->
             <div class="studentSelect">
                 <h2>Select a Student</h2>
                 <select name="students" id="studentsSelector">
@@ -46,6 +49,7 @@
             <div id="studentTablesWrapper">
                 <h2>Graduation Requirements</h2>
                 <div class="gradContentWrapper">
+                    <!-- graduation requirements table and pie chart -->
                     <div class="gradTableWrapper">
                         <h3>Current Credits Earned</h3>
                         <table class="studentGradTable" id="studentCreditsTable">
@@ -89,10 +93,12 @@
                     <button class="tab-link" data-tab="grades">Final Grades</button>
                 </div>
 
+                <!-- student info tab -->
                 <div class="tab-content active" id="info">
                     <div id = studentInfoTable></div>
                 </div>
 
+                <!-- attendance tab -->
                 <div class="tab-content" id="attendance">
                     <table class="studentInfoTable" id="studentAttendanceTable">
                         <thead>
@@ -107,6 +113,7 @@
                     </table>
                 </div>
 
+                <!-- classes tab -->
                 <div class="tab-content" id="classes">
                     <div style="margin: 10px;">
                         <input type="checkbox" id="currOnly">
@@ -130,6 +137,7 @@
                     </table>
                 </div>
 
+                <!-- grades tab -->
                 <div class="tab-content" id="grades">
                     <h3>Final Grades</h3>
                     <p id="gpaLabel">GPA: --</p>

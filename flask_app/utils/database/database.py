@@ -1,4 +1,3 @@
-import sqlite3
 import mysql.connector
 import csv
 from io import StringIO
@@ -8,10 +7,10 @@ import os
 import hashlib
 import base64
 from datetime import datetime, timedelta
-import random
 
 class database:
 
+    # init database 
     def __init__(self, purge = False):
 
         self.database = os.environ.get('DB_NAME', 'mydb')
@@ -31,11 +30,12 @@ class database:
                                 }
         #-----------------------------------------------------------------------------
 
+    # create tables and seed database
     def build_db(self):
         self.create_tables()
         self.seed_database()
 
-
+    # query db
     def query(self, query = "SELECT * FROM students", parameters = None):
 
         cnx = mysql.connector.connect(host     = self.host,
@@ -66,6 +66,7 @@ class database:
         cnx.close()
         return row
 
+    # create table
     def create_tables(self, purge=False, data_path = 'flask_app/database/'):
         ''' FILL ME IN WITH CODE THAT CREATES YOUR DATABASE TABLES.'''
 
@@ -88,6 +89,7 @@ class database:
             except Exception as e:
                 print(f"An error occurred while creating table '{table}': {e}")
 
+    # insert rows into specified table
     def insert_rows(self, table='table', columns=['x','y'], parameters=[['v11','v12'],['v21','v22']]):
         
         # Check if there are multiple rows present in the parameters
@@ -107,6 +109,7 @@ class database:
         insert_id = self.query(query,parameters)[0]['LAST_INSERT_ID()']         
         return insert_id
 
+    # hash given password
     def hash_password(self, password: str) -> str:
         """
         Hashes a password using PBKDF2-HMAC-SHA256 with a salt and returns the base64-encoded hash.
@@ -119,12 +122,14 @@ class database:
         dk = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
         return base64.b64encode(dk).decode('utf-8')
     
+    # check if given password matches hashed password
     def check_password(self, password: str, hashed: str) -> bool:
         """
         Checks if the provided password matches the hashed password.
         """
         return self.hash_password(password) == hashed
     
+    # seed database from csv files
     def seed_database(self):
         data_path = 'flask_app/database/inital_data/'
         for table in self.tables:
@@ -134,6 +139,7 @@ class database:
             else:
                 print(f"⚠️ CSV file for table '{table}' not found at: {csv_file}")
 
+    # import data from csv file into specified table
     def import_from_csv(self, table_name: str, file_path: str):
         """
         Imports data from a CSV file into the given table.
